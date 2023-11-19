@@ -8,13 +8,11 @@ st.text("""
          Nama   : A. Teguh Budi Setya Prasetya
          NIM    : 200411100144
          Kelas  : Proyek Sains Data B
-         """)
-st.write("""
-         Email  : a.tguhbdistyaprasetya@gmail.com\n
+         Dataset: Heart Disease
          """)
 
-st.markdown("# Ekstraksi Ciri dan klasifikasi Audio")
-st.text("Dataset berupa audio yang diekstrak menjadi 21 fitur numerik dan 7 class")
+st.markdown("Klasifikasi diagnosa penyakit jantung")
+st.text("Dataset memiliki 13 fitur dan 5 kelas (0-4)")
 
 
 

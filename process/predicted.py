@@ -1,91 +1,105 @@
 import pandas as pd
 import numpy as np
 import os
+import pickle
 import joblib
 import streamlit as st
-import librosa
 import scipy
+import sklearn
 
 def prediksi():
-    knn_zero = joblib.load('model/knn_z-score.sav')
-    knn_mmax = joblib.load('model/knn_mmax.sav')
 
-    scalar_zero = joblib.load('model/z-score_scaler.sav')
-    scalar_mmax = joblib.load('model/mmax_scaler.sav')
+    rf_model = joblib.load('model/random_forest_SMOTE.pkl')
+    xg_model = joblib.load('model/XGBoost_SMOTE.pkl')
+    nn_model = joblib.load('model/Neural_Network_SMOTE.pkl')
+    sv_model = joblib.load('model/SVM_SMOTE.pkl')
+    lr_model = joblib.load('model/Logistic_SMOTE.pkl')
+    nb_model = joblib.load('model/Naive_SMOTE.pkl')
+    minmax = joblib.load('model/scaler_mmax.pkl')
 
-    uploaded_audio = st.file_uploader("Unggah audio yang akan diprediksi", type=['mp3','wav','ogg'])
+    col1, col2, col3 = st.columns(3)
 
-    if uploaded_audio:
-        # Display the uploaded file
-        st.audio(uploaded_audio)
+    with col1:
+        age = st.number_input('Age', min_value=1, max_value=120, value=63)
+        sex = st.selectbox('Sex', ['Male', 'Female'], index=0)
+        cp = st.selectbox('Chest Pain Type', ['Typical Angina', 'Atypical Angina', 'Non-anginal Pain', 'Asymptomatic'], index=0)
+        trestbps = st.number_input('Resting Blood Pressure (mm Hg)', min_value=1, value=145)
+        chol = st.number_input('Cholesterol (mg/dL)', min_value=1, value=230)
 
-        x, sr = librosa.load(uploaded_audio, sr=None)
-        freqs = np.fft.fftfreq(x.size)
+    with col2:
+        fbs = st.selectbox('Fasting Blood Sugar > 120 mg/dl', ['False', 'True'], index=1)
+        restecg = st.selectbox('Resting Electrocardiographic Results', ['Normal', 'ST-T Wave Abnormality', 'Left Ventricular Hypertrophy'], index=2)
+        thalach = st.number_input('Maximum Heart Rate Achieved', min_value=1, value=150)
+        exang = st.selectbox('Exercise Induced Angina', ['No', 'Yes'], index=1)
+        oldpeak = st.number_input('ST Depression Induced by Exercise', min_value=0.0, value=2.3)
 
-        mean = np.mean(freqs)
-        std = np.std(freqs)
-        maxv = np.amax(freqs)
-        minv = np.amin(freqs)
-        median = np.median(freqs)
-        skew = scipy.stats.skew(freqs)
-        kurt = scipy.stats.kurtosis(freqs)
-        modus = scipy.stats.mode(freqs)[0]
-        q1 = np.quantile(freqs, 0.25)
-        q3 = np.quantile(freqs, 0.75)
-        iqr = scipy.stats.iqr(freqs)
+    with col3:
+        slope = st.selectbox('Slope of the Peak Exercise ST Segment', ['Upsloping', 'Flat', 'Downsloping'], index=2)
+        ca = st.number_input('Number of Major Vessels Colored by Fluoroscopy', min_value=0, value=0)
+        thal = st.selectbox('Thalassemia', ['Normal', 'Fixed Defect', 'Reversable Defect'], index=1)
 
-        zcr = librosa.feature.zero_crossing_rate(x)
-        zcr_mean = np.mean(zcr)
-        zcr_median = np.median(zcr)
-        zcr_std = np.std(zcr)
-        zcr_kurt = scipy.stats.kurtosis(zcr, axis=1)[0]
-        zcr_skew = scipy.stats.skew(zcr, axis=1)[0]
+    # Button to trigger prediction
+    if st.button('Predict'):
+        # Use the entered values for further processing or prediction
+        if sex == 'Male':
+            sex = 1
+        else:
+            sex = 0
 
-        rmse = librosa.feature.rms(y=x)
-        rmse_mean = np.mean(rmse)
-        rmse_median = np.median(rmse)
-        rmse_std = np.std(rmse)
-        rmse_kurt = scipy.stats.kurtosis(rmse, axis=1)[0]
-        rmse_skew = scipy.stats.skew(rmse, axis=1)[0]
+        if cp == 'Typical Angina':
+            cp = 1
+        elif cp == 'Atypical Angina':
+            cp = 2
+        elif cp == 'Non-anginal Pain':
+            cp = 3
+        else:
+            cp = 4
 
-        df = pd.DataFrame({
-            'mean': mean,
-            'std': std,
-            'max': maxv,
-            'min': minv,
-            'median': median,
-            'modus': modus,
-            'skew': skew,
-            'kurt': kurt,
-            'q1': q1,
-            'q3': q3,
-            'iqr': iqr,
-            'zcr_mean': zcr_mean,
-            'zcr_median': zcr_median,
-            'zcr_std': zcr_std,
-            'zcr_kurt': zcr_kurt,
-            'zcr_skew': zcr_skew,
-            'rmse_mean': rmse_mean,
-            'rmse_median': rmse_median,
-            'rmse_std': rmse_std,
-            'rmse_kurt': rmse_kurt,
-            'rmse_skew': rmse_skew,
-        })
-        st.write(df)
+        if fbs == 'True':
+            fbs = 1
+        else:
+            fbs = 0
 
-        st.subheader("Z-Score")
-        scaler = joblib.load('model/z-score_scaler.pkl')
-        knn_zero_model = joblib.load('model/knn_z-score_grid.pkl')
+        if restecg == 'Normal':
+            restecg = 0
+        elif restecg == 'ST-T Wave Abnormality':
+            restecg = 1
+        else:
+            restecg = 2
 
-        st.write('Tanpa PCA')
-        x_test_zscore = scaler.transform(df)
-        y_pred = knn_zero_model.predict(x_test_zscore)
-        st.write(y_pred)
+        if exang == 'No':
+            exang = 0
+        else:
+            exang = 1
 
-        st.write('Dengan PCA')
-        knn_zero_PCA_model = joblib.load('model/knn_mmax_grid_PCA.pkl')
-        pca = joblib.load('model/PCA_mmax.pkl')
-        x_test_zscore_pca = pca.transform(x_test_zscore)
-        st.write(x_test_zscore_pca)
-        y_pred_pca = knn_zero_PCA_model.predict(x_test_zscore_pca)
-        st.write(y_pred)
+        if slope == 'Upsloping':
+            slope = 1
+        elif slope == 'Flat':
+            slope = 2
+        else:
+            slope = 3
+
+        if thal == 'Normal':
+            thal = 3
+        elif thal == 'Fixed Defect':
+            thal = 6
+        else:
+            thal = 7
+
+        st.write("Perform prediction or processing with the entered values.")
+
+        x_test = np.array([age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak, slope, ca, thal]).reshape(1, -1)
+        print(x_test)
+        scaled_test = minmax.transform(x_test)
+        print(scaled_test)
+        st.success(f'Random Forest  :{rf_model.predict(scaled_test)[0]}')
+        st.success(f'XGBoost        :{xg_model.predict(scaled_test)[0]}')
+        st.success(f'Neural Network :{nn_model.predict(scaled_test)[0]}')
+        st.success(f'Logistic Regression :{lr_model.predict(scaled_test)[0]}')
+        st.success(f'SVM :{sv_model.predict(scaled_test)[0]}')
+        st.success(f'Naive Bayes :{nb_model.predict(scaled_test)[0]}')
+
+
+
+
+

@@ -6,9 +6,6 @@ import os
 import time
 from streamlit_option_menu import option_menu
 from streamlit_extras.app_logo import add_logo
-
-from process import model
-from process import preprocessing
 from process import predicted
 
 def loading():
@@ -19,12 +16,12 @@ add_logo("https://www.google.com/url?sa=i&url=https%3A%2F%2Fkaciicons.tumblr.com
 st.markdown("# Implementasi")
 selected = option_menu(
     menu_title  = "Proyek Sains Data",
-    options     = ["Dataset","Preprocessing","Modeling", "Prediksi"],
+    options     = ["Dataset","Prediksi"],
     orientation = "horizontal",
 )
 
 
-dataset = pd.read_csv('data/dataset.csv')
+dataset = pd.read_csv('data/dataset_SMOTE.csv')
 
 # Save dataset
 # joblib.dump(dataset, 'model/dataset.sav')
@@ -70,29 +67,6 @@ if (selected == "Dataset"):
              > Surprise
            """)
 
-########################################## Preprocessing #####################################################
-elif (selected == 'Preprocessing'):
-    st.subheader('Splitting data')
-    preprocessing.splitting()
-    st.subheader('Normalisasi')
-    z, mmax = st.tabs(['Z-Score', 'MinMax'])
-    loading()
-
-    with z:
-        preprocessing.z_score()
-    with mmax:
-        preprocessing.minMax()
-########################################## Modeling #####################################################
-elif(selected == 'Modeling'):
-  loading()
-  st.caption('Mencari K (1-20) dan PCA (20-1) terbaik menggunakan Grid Search')
-  z, mmax = st.tabs(['Z-Score', 'MinMax'])
-
-  loading()
-  with z:
-      model.knn_zero()
-  with mmax:
-      model.knn_minmax()
 
 elif(selected == 'Prediksi'):
   loading()
