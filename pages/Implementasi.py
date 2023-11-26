@@ -34,37 +34,28 @@ if (selected == "Dataset"):
 
     with keterangan:
         st.text("""
-             Column:
-             - Mean: Rata-rata freqs
-             - Std: Standar devisiasi freqs
-             - Max: Nilai terbesar dari freqs
-             - min: Nilai terkecil dari freqs
-             - median: Nilai tengah freqs
-             - modus: Nilai paling sering muncul dari freqs
-             - skew: Kecondongan freqs
-             - kurt: Distribusi freqs
-             - q1: Titik potong 25 
-             - q2: Titik potong 75
-             - iqr: Rentang akar kuartil
-             - zcr mean: Mean dari ZCR
-             - zcr median: Median dari ZCR
-             - zcr std: Standar devisiasi dari ZCR
-             - zcr kurt: Kurtosis dari ZCR
-             - zcr skew: Kecondongan dari ZCR
-             - rmse mean: Mean dari RMSE
-             - rmse median: Median dari RMSE
-             - rmse std: Standar devisiasi dari RMSE
-             - rmse kurt: Kurtosis dari RMSE
-             - rmse skew: Kecondongan dari RMSE
+             Fitur:
+             - age: umur dalam tahun
+             - sex: jenis kelamin
+             - cp: chest pain type (tipe penyakit dada)
+             - trestbps: tekanan darah (dalam mm Hg)
+             - chol: kolestrol (dalam mg/dl)
+             - fbs: (gula darah > 120 mg/dl)
+             - restecg: hasil kondisi ECG pasien saat sedang istirahat
+             - thalach: detak jantung maksimal yang diraih permenit
+             - exang: nyeri dada setelah berolahraga
+             - oldpeak:  penurunan segment ST pada elektrokardiogram (EKG) yang terjadi selama tes latihan fisik
+             - slope: tkemiringan segmen ST selama uji latihan fisik pada elektrokardiogram (EKG)
+             - ca: jumlah pembuluh darah utama yang ditemukan dalam gambaran angiografi koroner yang diwarnai dengan fluoroskopi (0-3)
+             - thal: stress test atau tes latihan stres thallium, mengevaluasi aliran darah ke otot jantung selama latihan fisik dan pada istirahat
 
-             Class
-             > Sad
-             > Fear
-             > Happy
-             > Angry
-             > Neutral
-             > Disgust
-             > Surprise
+
+             Kelas
+             > Value 0: Tidak ada penyakit jantung
+             > Value 1: Penyakit jantung ringan
+             > Value 2: Penyakit jantung sedang
+             > Value 3: Penyakit jantung signifikan
+             > Value 4: Penyakit jantung parah
            """)
 
 

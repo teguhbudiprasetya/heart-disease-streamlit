@@ -93,11 +93,11 @@ def prediksi():
         scaled_test = minmax.transform(x_test)
         print(scaled_test)
         st.success(f'Random Forest  :{rf_model.predict(scaled_test)[0]}')
-        st.success(f'XGBoost        :{xg_model.predict(scaled_test)[0]}')
-        st.success(f'Neural Network :{nn_model.predict(scaled_test)[0]}')
-        st.success(f'Logistic Regression :{lr_model.predict(scaled_test)[0]}')
-        st.success(f'SVM :{sv_model.predict(scaled_test)[0]}')
-        st.success(f'Naive Bayes :{nb_model.predict(scaled_test)[0]}')
+        # st.success(f'XGBoost        :{xg_model.predict(scaled_test)[0]}')
+        # st.success(f'Neural Network :{nn_model.predict(scaled_test)[0]}')
+        # st.success(f'Logistic Regression :{lr_model.predict(scaled_test)[0]}')
+        # st.success(f'SVM :{sv_model.predict(scaled_test)[0]}')
+        # st.success(f'Naive Bayes :{nb_model.predict(scaled_test)[0]}')
 
 
 
