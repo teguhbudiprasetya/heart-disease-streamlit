@@ -1,5 +1,7 @@
 # heart-disease-clasification-streamlit
 
+Demo my model at https://teguhprasetya-heart-disease-app-deploy.streamlit.app/
+
 ## Installation
 
 To install the required dependencies for this app, you can use the following command:
