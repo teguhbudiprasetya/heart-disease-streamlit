@@ -1,4 +1,4 @@
-# audio-clasification-streamlit
+# heart-disease-clasification-streamlit
 
 ## Installation
 
